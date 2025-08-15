@@ -39,7 +39,7 @@ export default function ContactForm() {
 
       setIsSubmitted(true)
       setFormData({ name: '', email: '', phone: '', service: '', message: '' })
-    } catch (err) {
+    } catch {
       alert('Sorry, something went wrong. Please try again or call us at (954) 515-8702.')
     } finally {
       setIsSubmitting(false)

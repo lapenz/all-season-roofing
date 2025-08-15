@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import Image from 'next/image'
 
 type HeroProps = {
@@ -12,10 +12,11 @@ type HeroProps = {
 }
 
 export default function Hero({ src, sources, alt, overlayClassName, children }: HeroProps) {
-  const candidateSources = (sources && sources.length > 0)
-    ? sources
-    : (src ? [src] : [])
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const candidateSources = useMemo(() => 
+    (sources && sources.length > 0)
+      ? sources
+      : (src ? [src] : [])
+  , [sources, src])
   const [resolvedSrc, setResolvedSrc] = useState<string>(candidateSources[0] ?? 'https://placehold.co/1920x1080?text=Roofing+Photo')
 
   useEffect(() => {
@@ -33,7 +34,6 @@ export default function Hero({ src, sources, alt, overlayClassName, children }: 
       test.onload = () => {
         if (!isMounted) return
         setResolvedSrc(nextSrc)
-        setCurrentIndex(index)
       }
       test.onerror = () => {
         index += 1
@@ -46,7 +46,7 @@ export default function Hero({ src, sources, alt, overlayClassName, children }: 
     return () => {
       isMounted = false
     }
-  }, [sources, src])
+  }, [candidateSources])
 
   return (
     <section className="relative text-white overflow-hidden py-20">
